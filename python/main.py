@@ -25,8 +25,12 @@ def root():
 
 @app.get("/items")
 def get_item():
-    with open("item.json") as file:
+    if os.path.isfile("item.json"):
+        with open("item.json") as file:
             item_dict = json.load(file)
+    else:
+        item_dict = {"item": []}
+    
     return item_dict
 
 @app.post("/items")
