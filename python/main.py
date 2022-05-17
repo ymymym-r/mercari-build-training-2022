@@ -23,6 +23,16 @@ app.add_middleware(
 def root():
     return {"message": "Hello, world!"}
 
+@app.get("/items")
+def get_item():
+    if os.path.isfile("item.json"):
+        with open("item.json") as file:
+            item_dict = json.load(file)
+    else:
+        item_dict = {"item": []}
+    
+    return item_dict
+
 @app.post("/items")
 def add_item(name: str = Form(...), category: str = Form(...)):
     #item.jsonが既にあるとき
