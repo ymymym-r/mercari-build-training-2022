@@ -82,6 +82,23 @@ def add_item(name: str = Form(...), category: str = Form(...)):
 
     return {"message": f"item received: {name}"}
 
+
+@app.get("/search")
+def search_item(keyword: str):
+    
+    with sqlite3.connect("../db/mercari.sqlite3") as conn:
+        cur = conn.cursor()
+        #データの取得
+        cur.execute("SELECT name, category AS items FROM items WHERE name=?", (keyword,))
+        item = cur.fetchall()
+        item_dict = {"items" : []}
+        for i in range(len(item)):
+                item_dict["items"].append({"name": item[i][0], "category": item[i][1]})
+        
+    return item_dict
+    
+
+
 @app.get("/image/{items_image}")
 async def get_image(items_image):
     # Create image path
